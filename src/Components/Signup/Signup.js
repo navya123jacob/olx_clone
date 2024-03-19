@@ -1,8 +1,8 @@
 import React, { useState, useReducer, useContext } from 'react';
-import '../Signup.css';
+import './Signup.css';
 import { Link } from 'react-router-dom';
-import Logo from '../olx-logo.png';
-import { FirebaseContext } from '../store/FirebaseContext';
+import Logo from '../../olx-logo.png';
+import { FirebaseContext } from '../../store/Contexts_olx';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
@@ -27,10 +27,10 @@ const Signup = () => {
   };
 
   const [state, dispatch] = useReducer(reducer, {
-    username: 'Enter username',
-    email: 'Enter email',
+    username: '',
+    email: '',
     password: '',
-    phone: '0',
+    phone: '',
   });
 
   const nameChange = (e) => {
@@ -48,12 +48,12 @@ const Signup = () => {
   };
 
   const phoneChange = (e) => {
-    dispatch({ type: 'CHANGE_PHONE', phone: e.target.value });
+    dispatch({ type: 'CHANGE_PHONE', payload: e.target.value });
   };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-
+    
     const errors = {};
 
     // Validate username
@@ -106,13 +106,18 @@ const Signup = () => {
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
+      if(errorCode==='auth/email-already-in-use'){
+        errors.invalid="Already registered"
+        setErrors(errors)
+      }
+      console.log(errorCode)
       console.error(errorCode, errorMessage);
     }
   };
 
   return (
     <>
-      <div className="signupPage"> {/* Add a wrapping div with a specific class */}
+      <div className="signupPage "> {/* Add a wrapping div with a specific class */}
         <div className="signupParentDiv">
           <img width="200px" height="200px" src={Logo} alt="OLX Logo" />
           <form onSubmit={handlesubmit}>
@@ -162,6 +167,7 @@ const Signup = () => {
               onChange={passChange}
             />
             <div className="error m-1">{errors.password && errors.password}</div>
+            <div className="error m-1">{errors.invalid && errors.invalid}</div>
             <br />
             <br />
             <button type="submit">Signup</button>

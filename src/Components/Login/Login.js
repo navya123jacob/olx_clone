@@ -3,8 +3,8 @@ import { Link,useNavigate } from 'react-router-dom';
 import Logo from '../../olx-logo.png';
 import './Login.css';
 
-import { FirebaseContext } from '../../store/FirebaseContext';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { FirebaseContext } from '../../store/Contexts_olx';
+import {  signInWithEmailAndPassword   } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 
 
@@ -19,6 +19,7 @@ function Login() {
         return { ...current, email: action.payload };
       case 'CHANGE_PASSWORD':
         return { ...current, password: action.payload };
+     
       
       default:
         return current;
@@ -28,7 +29,7 @@ function Login() {
   const [state, dispatch] = useReducer(reducer, {
     
     email: 'Enter email',
-    password: '123',
+    password: ''
    
   });
 
@@ -58,7 +59,7 @@ function Login() {
 
     
     // Validate password
-    if (state.password === '') {
+    if (state.password === '' ) {
       errors.password = 'Password is required';
     }
 
@@ -67,15 +68,25 @@ function Login() {
       setErrors(errors);
       return;
     }
-
-    
+    let credentials;
+    // Perform user authentication and database operation
+    try {
+      credentials=await signInWithEmailAndPassword(auth, state.email, state.password)
+      console.log(credentials)
       navigate('/');
-   
+    } catch (error) {
+      errors.email ='Invalid email and password'
+      setErrors(errors);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+    }
   };
 
   return (
     <div class="login_outer">
       <div className="loginParentDiv">
+        
         <img width="200px" height="200px" src={Logo}></img>
         <form onSubmit={handlesubmit}>
           <label htmlFor="fname">Email</label>
@@ -89,6 +100,9 @@ function Login() {
             onChange={emailChange}
           />
           <br />
+          <div className="error m-1">{errors.email && errors.email}</div>
+            <br />
+            
           <label htmlFor="lname">Password</label>
           <br />
           <input
@@ -99,7 +113,9 @@ function Login() {
             value={state.password}
             onChange={passChange}
           />
-          <br />
+          <div className="error m-1">{errors.password && errors.password}</div>
+          <div className="error m-1">{errors.ivalid && errors.invalid}</div>
+            <br />
           <br />
           <button type='submit'>Login</button>
         </form>

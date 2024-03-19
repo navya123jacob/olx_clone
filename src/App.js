@@ -1,10 +1,12 @@
 
+
 import './App.css';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import Home from './Components/Home';
-import Signup from './Components/Signup';
 import Login from './Components/Login/Login';
+import Signup from './Components/Signup/Signup';
+import Home from './Home';
 function App() {
+
   return (
     <div className="App">
       <BrowserRouter>

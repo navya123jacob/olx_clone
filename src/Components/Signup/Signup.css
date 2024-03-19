@@ -41,7 +41,7 @@
     color: white;
 } 
 .signupPage {
-  background-image: url('./bg_image_gradient_01.png');
+  background-image: url('../../bg_image_gradient_01.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

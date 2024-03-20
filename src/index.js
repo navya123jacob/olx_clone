@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 //importing context
-import { firebaseapp,auth,firestore} from './Firebase/config';
+import { firebaseapp,auth,firestore,storage} from './Firebase/config';
 import { FirebaseContext } from './store/Contexts_olx';
 import { Context } from './store/Contexts_olx';
 
@@ -13,7 +13,7 @@ import { Context } from './store/Contexts_olx';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FirebaseContext.Provider value={{Firebase:firebaseapp,auth:auth,firestore}}>
+    <FirebaseContext.Provider value={{Firebase:firebaseapp,auth:auth,firestore,storage:storage}}>
     <Context>
     <App />
     </Context>

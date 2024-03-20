@@ -2,6 +2,7 @@ import React from 'react';
 
 import './Banner.css';
 import Arrow from '../../assets/Arrow'
+import bannercopy from '../../assets/images/bannercopy.png';
 
 function Banner() {
   return (
@@ -23,10 +24,7 @@ function Banner() {
           </div>
         </div>
         <div className="banner">
-          <img
-            src='../../assets/images/bannercopy.png'
-            alt="hghg"
-          />
+        <img src={bannercopy} alt="hghg" />
         </div>
       </div>
       
@@ -35,3 +33,5 @@ function Banner() {
 }
 
 export default Banner;
+
+// To display images in your React application, you should import them into your component and use them as React components or specify their paths relative to your project's directory structure.

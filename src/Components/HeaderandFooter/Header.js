@@ -8,24 +8,25 @@ import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 
 
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged,signOut  } from "firebase/auth";
 import { FirebaseContext } from '../../store/Contexts_olx';
 import { AuthContext } from '../../store/Contexts_olx';
 
-import {collection, query, orderBy, onSnapshot,where,getDocs} from "firebase/firestore"
+import {collection, query,where,getDocs} from "firebase/firestore"
+import { useNavigate,Link } from 'react-router-dom';
 
 
 function Header() {
-  const {setUser}=useContext(AuthContext)
+  const {myuser,setMyuser}=useContext(AuthContext)
   const {  auth, firestore } = useContext(FirebaseContext);
-  const [tasks, setTasks] = useState([])
+  
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in, see docs for a list of available properties
           const uid = user.uid;
           console.log("uid", uid,'user',user.email)
-          setUser(user)
+          
           const getUserData = async () => {
             try {
               // Create a query to find the document with the provided email
@@ -41,6 +42,7 @@ function Header() {
                 // Get the username from the user data
                 const { username } = userData;
                 console.log(username)
+                setMyuser(username)
                 
               }
               
@@ -52,12 +54,29 @@ function Header() {
 
         } else {
           // User is signed out
-          // ...
           console.log("user is logged out")
         }
       });
      
 }, [])
+
+
+const navigate=useNavigate()
+
+const handleLogout = () => {               
+  signOut(auth).then(() => {
+  // Sign-out successful.
+      navigate("/login");
+      console.log("Signed out successfully")
+  }).catch((error) => {
+  // An error happened.
+  });
+}
+
+const navigateToSell=()=>{
+  navigate("/create");
+}
+
 
   return (
     <div className="headerParentDiv">
@@ -86,15 +105,24 @@ function Header() {
           <Arrow></Arrow>
         </div>
         <div className="loginPage">
-          <span>Login</span>
+          {/* Render the user's name if logged in, or 'Login' */}
+          {myuser ?`Welcome ${myuser}` : (<Link to='/login'>Login</Link>)}
           <hr />
+         
         </div>
-
+        <div className="loginPage">
+  {/* Render the user's name if logged in, or 'Login' */}
+  {myuser && (
+    <a onClick={handleLogout}>Logout</a>
+  
+  )}
+  <hr />
+</div>
         <div className="sellMenu">
-          <SellButton></SellButton>
+          <SellButton />
           <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+            <SellButtonPlus />
+            <span onClick={navigateToSell}>SELL</span>
           </div>
         </div>
       </div>

@@ -19,7 +19,8 @@ import { useNavigate,Link } from 'react-router-dom';
 function Header() {
   const {myuser,setMyuser}=useContext(AuthContext)
   const {  auth, firestore } = useContext(FirebaseContext);
-  
+  const [myusername,setMyusername]=useState(null)
+
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -41,8 +42,10 @@ function Header() {
                 
                 // Get the username from the user data
                 const { username } = userData;
-                console.log(username)
-                setMyuser(username)
+                const uid = querySnapshot.docs[0].id;
+                
+                setMyuser(uid)
+                setMyusername(username)
                 
               }
               
@@ -106,7 +109,7 @@ const navigateToSell=()=>{
         </div>
         <div className="loginPage">
           {/* Render the user's name if logged in, or 'Login' */}
-          {myuser ?`Welcome ${myuser}` : (<Link to='/login'>Login</Link>)}
+          {myusername ?`Welcome ${myusername}` : (<Link to='/login'>Login</Link>)}
           <hr />
          
         </div>

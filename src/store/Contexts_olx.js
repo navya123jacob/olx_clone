@@ -9,6 +9,7 @@ const Context=({children})=>{
     // Here, `children` represents the elements passed between <Context> tags
   
     const [myuser,setMyuser]=useState(null)
+   
     return(
         //   Render whatever children elements were passed 
         <AuthContext.Provider value={{myuser,setMyuser}}>
